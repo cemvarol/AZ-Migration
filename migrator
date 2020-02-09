@@ -1,26 +1,29 @@
-az group create --name Migration --location 'EastUS'
-
 a=$(az ad signed-in-user show --query userPrincipalName)
 A=$(echo "$a" | sed -e 's/\(.*\)/\L\1/')
 B=${A:$(echo `expr index "$A" @`)}
 C=${B:: -24}
-D=$(echo "$C"mig01)
+D=$(echo "$C"con01)
+E=$(echo "$C"con02)
+RG=Migration
+L=EastUS2
+VNet=$VNet
+
+az group create --name $RG --location $L
+
+az storage account create --name $D --resource-group $RG --kind Storage --location $L --sku Standard_LRS
 
 
-az storage account create --name $D --resource-group Migration --kind Storage --location EastUS --sku Standard_LRS
+az network nsg create -g $RG -n MIGNSG
+az network nsg rule create -g $RG --nsg-name MIGNSG -n MigRule --priority 100 --destination-port-ranges "*" --direction Inbound
 
 
-az network nsg create -g Migration -n MIGNSG
-az network nsg rule create -g Migration --nsg-name MIGNSG -n MigRule --priority 100 --destination-port-ranges "*" --direction Inbound
+az network vnet create --resource-group $RG --name $VNet  --address-prefixes 10.205.0.0/16 --subnet-name SN01 --subnet-prefix 10.205.1.0/24
 
+export SUBNETID=$(az network vnet subnet show --resource-group $RG --vnet-name $VNet --name SN01 --query id -o tsv)
+export SUBNETN=$(az network vnet subnet show --resource-group $RG --vnet-name $VNet --name SN01 --query name -o tsv)
 
-az network vnet create --resource-group Migration --name MigVNet  --address-prefixes 10.205.0.0/16 --subnet-name SN01 --subnet-prefix 10.205.1.0/24
+az network vnet subnet update -g $RG --vnet-name $VNet --name $SUBNETN --network-security-group MIGNSG
 
-export SUBNETID=$(az network vnet subnet show --resource-group Migration --vnet-name MigVNet --name SN01 --query id -o tsv)
-export SUBNETN=$(az network vnet subnet show --resource-group Migration --vnet-name MigVNet --name SN01 --query name -o tsv)
-
-az network vnet subnet update -g Migration --vnet-name MigVNet --name $SUBNETN --network-security-group MIGNSG
-
-az vm create --resource-group Migration --name Migrator --location EastUS --image MicrosoftWindowsServer:WindowsServer:2019-Datacenter-with-Containers:17763.557.20190604 --admin-username cem --admin-password 1q2w3e4r5t6y* --size standard_D4s_v3 --public-ip-address "Migrator-Pip" --subnet $SUBNETID --boot-diagnostics-storage $D --license-type Windows_Server --nsg ""
+az vm create --resource-group $RG --name Migrator --location $L --image MicrosoftWindowsServer:WindowsServer:2019-Datacenter-with-Containers:17763.557.20190604 --admin-username cem --admin-password 1q2w3e4r5t6y* --size standard_D4s_v3 --public-ip-address "Migrator-Pip" --subnet $SUBNETID --boot-diagnostics-storage $D --license-type Windows_Server --nsg ""
 
 

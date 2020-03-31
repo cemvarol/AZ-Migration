@@ -1,6 +1,8 @@
-﻿netsh int ip set address "Ethernet" static 1.1.1.2 255.0.0.0 1.1.1.1
+Rename-NetAdapter -Name Eth* -NewName "EthernetX"
 
-netsh int ip set DNS "Ethernet" static 8.8.8.8
+netsh int ip set address "EthernetX" static 1.1.1.2 255.0.0.0 1.1.1.1
+
+netsh int ip set DNS "EthernetX" static 8.8.8.8
 
 Add-WindowsFeature Web-Server, Web-Mgmt-Tools
 

@@ -18,5 +18,8 @@ Start-Sleep -s 3
 Start-Process Powershell.exe -Argumentlist "-file C:\SC\1-VHD&Chrome.ps1"
 Start-Process Powershell.exe -Argumentlist "-file C:\SC\2-Set.ps1"
 
+# REMEMBER, set the inbound port address translation...
+
+
 #Start-Process Powershell.exe -Argumentlist "-file C:\SC\3-VM.ps1"
 

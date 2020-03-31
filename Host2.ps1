@@ -20,7 +20,7 @@ $start_time = Get-Date
 Invoke-WebRequest -Uri $url -OutFile $output
 
 Mount-VHD –Path ".\2012-R2.vhd"
-copy C:\Guest.ps1 f:
+copy C:\Guest.ps1 f:\
 
 Dismount-VHD –Path ".\2012-R2.vhd"
 
@@ -31,15 +31,11 @@ $output = ".\Guest.ps1"
 $start_time = Get-Date
 Invoke-WebRequest -Uri $url -OutFile $output
 
-Mount-VHD –Path ".\2012-R2.vhd"
-copy C:\Guest.ps1 f:
 
-Dismount-VHD –Path ".\2012-R2.vhd"
-
- cd\
+cd\
  
- virtmgmt.msc
+virtmgmt.msc
 
- Start-VM -Name 2012-R2
+Start-VM -Name 2012-R2
 
 

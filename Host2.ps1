@@ -20,7 +20,7 @@ $start_time = Get-Date
 Invoke-WebRequest -Uri $url -OutFile $output
 
 Mount-VHD –Path ".\2012-R2.vhd"
-copy C:\Guest.ps1 f:\
+copy C:\SC\Guest.ps1 f:\
 
 Dismount-VHD –Path ".\2012-R2.vhd"
 

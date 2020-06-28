@@ -1,0 +1,5 @@
+
+ .\azcopy.exe copy "2012C.vhd" $diskSas.AccessSAS --blob-type PageBlob
+ 
+
+ Revoke-AzDiskAccess -ResourceGroupName 'Migrator' -DiskName 'cems.vhd'

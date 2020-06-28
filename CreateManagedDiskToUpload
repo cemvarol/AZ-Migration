@@ -1,0 +1,6 @@
+
+$vhdSizeBytes = (Get-Item "C:\VMs\2012C.vhd\2012C.vhd").length
+
+$diskconfig = New-AzDiskConfig -SkuName 'Standard_LRS' -OsType 'Windows' -UploadSizeInBytes $vhdSizeBytes -Location 'EastUs' -CreateOption 'Upload'
+
+New-AzDisk -ResourceGroupName "Migrator" -DiskName "cems.vhd" -Disk $diskconfig

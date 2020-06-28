@@ -1,4 +1,13 @@
-﻿Rename-NetAdapter -Name Eth* -NewName "EthernetX"
+Set-Service W32Time -StartupType Automatic
+w32tm /config /syncfromflags:manual /manualpeerlist:"time.windows.com"
+w32tm /config /reliable:yes
+net start w32time
+
+w32tm /resync /nowait
+
+Tzutil /s "GMT Standard Time"
+
+Rename-NetAdapter -Name Eth* -NewName "EthernetX"
 
 netsh int ip set address "EthernetX" static 1.1.1.2 255.0.0.0 1.1.1.1
 
